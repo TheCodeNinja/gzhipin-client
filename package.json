@@ -36,6 +36,8 @@
   "devDependencies": {
     "babel-plugin-import": "^1.12.2",
     "customize-cra": "^0.8.0",
+    "less": "^2.7.3",
+    "less-loader": "^5.0.0",
     "react-app-rewired": "^2.1.4",
     "redux-devtools-extension": "^2.13.8"
   }
