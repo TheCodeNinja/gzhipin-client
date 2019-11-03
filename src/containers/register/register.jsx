@@ -42,11 +42,11 @@ export default class Register extends Component {
                 <WingBlank>
                     <List>
                         <WhiteSpace />
-                        <InputItem onChange={val => {this.handleChange('username', val)}}>用戶名：</InputItem>
+                        <InputItem placeholder="請輸入用戶名" onChange={val => {this.handleChange('username', val)}}>用戶名：</InputItem>
                         <WhiteSpace />
-                        <InputItem type="password" onChange={val => {this.handleChange('password', val)}}>密&nbsp;&nbsp;&nbsp;&nbsp;碼：</InputItem>
+                        <InputItem placeholder="請輸入密碼" type="password" onChange={val => {this.handleChange('password', val)}}>密&nbsp;&nbsp;&nbsp;&nbsp;碼：</InputItem>
                         <WhiteSpace />
-                        <InputItem type="password" onChange={val => {this.handleChange('password2', val)}}>確認密碼：</InputItem>
+                        <InputItem placeholder="請輸入確認密碼" type="password" onChange={val => {this.handleChange('password2', val)}}>確認密碼：</InputItem>
                         <WhiteSpace />
                         <ListItem>
                             <span>用戶類型：</span>
