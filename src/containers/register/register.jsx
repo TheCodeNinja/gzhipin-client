@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import {
     NavBar, WingBlank, List, InputItem, WhiteSpace, Radio, Button
 } from 'antd-mobile'
+import { connect } from 'react-redux'
+import { register } from '../../redux/actions'
+import { Redirect } from 'react-router-dom'
 
 import Logo from '../../components/logo/logo'
 
 const ListItem = List.Item
 
-export default class Register extends Component {
+class Register extends Component {
 
     state = {
         username: '',
@@ -17,7 +20,7 @@ export default class Register extends Component {
     }
 
     register = () => {
-        console.log(this.state)
+        this.props.register(this.state)
     }
 
     // 處理輸入數據的改變，更新對應的狀態
@@ -34,6 +37,11 @@ export default class Register extends Component {
     render () {
 
         const { type } = this.state
+        const { msg, redirectTo } = this.props.user
+
+        if (redirectTo) {
+            return <Redirect to={redirectTo}/>
+        }
 
         return (
             <div>
@@ -41,6 +49,7 @@ export default class Register extends Component {
                 <Logo />
                 <WingBlank>
                     <List>
+                        {msg ? <div className='error-msg'>{ msg }</div> : null}
                         <WhiteSpace />
                         <InputItem placeholder="請輸入用戶名" onChange={val => {this.handleChange('username', val)}}>用戶名：</InputItem>
                         <WhiteSpace />
@@ -64,3 +73,9 @@ export default class Register extends Component {
         )
     }
 }
+
+// The connect() function connects a React component to a Redux store
+export default connect(
+    state => ({ user: state.user }), 
+    { register } // 向UI组件Register传一个register函數
+)(Register)

@@ -9,15 +9,16 @@ import { AUTH_SUCCESS, ERROR_MSG } from './action-types'
 const initUser = {
     username: '', 
     type: '', 
-    msg: ''
+    msg: '',
+    redirectTo: '' // 需要自動重定向的路徑
 }
 
 function user(state=initUser, action) {
     switch (action.type) {
         case AUTH_SUCCESS: // data是user
             return {
-                ...state, // 先把原本的state对象拆解出来
-                ...action.data // 因为data是user, 拆解他并覆盖掉旧的state对象的值
+                ...action.data, // 因为data是user, 拆解他并覆盖掉旧的state对象的值
+                redirectTo: '/'
             }
         case ERROR_MSG: // data是msg
             return {
