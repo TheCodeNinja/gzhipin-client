@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { NavBar, InputItem, TextareaItem, Button } from 'antd-mobile'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import HeaderSelector from '../../components/header-selector/header-selector'
+import { updateUser } from "../../redux/actions";
 
 class JobSeekerInfo extends Component {
 
@@ -25,10 +27,16 @@ class JobSeekerInfo extends Component {
     }
 
     handleSave = () => {
-        console.log(this.state);
+        // console.log(this.state);
+        this.props.updateUser(this.state)
     }
 
     render() {
+        const {header, type, username} = this.props.user;
+        if (header && username) { // 信息完善以后跳转的页面
+          const path = type === 'recruit' ? '/boss' : '/jobseeker';
+          return <Redirect to={path}></Redirect>
+        }
         return (
             <div>
                 <NavBar>大神完善信息</NavBar>
@@ -42,6 +50,6 @@ class JobSeekerInfo extends Component {
 }
 
 export default connect(
-  state => ({}),
-  {}
+  state => ({user: state.user}),
+  {updateUser}
 )(JobSeekerInfo)

@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import JobSeekerInfo from '../jobseeker-info/jobseeker-info'
 import BossInfo from '../boss-info/boss-info'
 
-export default class Main extends Component {
+class Main extends Component {
+
     render() {
+
+        // 檢查用戶是否登陆，如果沒有, 自动重定向到登陆界面
+        const { user } = this.props
+        if (!user._id) {
+            return <Redirect to='/login'/>
+        }
+
         return (
             <div>
                 <Switch>
@@ -16,3 +25,7 @@ export default class Main extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+  )(Main)
