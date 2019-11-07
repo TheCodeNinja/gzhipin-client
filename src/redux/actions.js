@@ -4,8 +4,8 @@
  * 同步action
  */
 
-import { AUTH_SUCCESS, ERROR_MSG } from "./action-types"
-import { reqRegister, reqLogin } from '../api'
+import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from "./action-types"
+import { reqRegister, reqLogin, reqUpdateUser } from '../api'
 
 // 每一个action-type都对应一个同步action
 
@@ -14,6 +14,12 @@ const authSuccess = (user) => ({ type: AUTH_SUCCESS, data: user })
 
 // 错误提示信息的同步action
 const errorMsg = (msg) => ({ type: ERROR_MSG, data: msg })
+
+// 接收用戶的同步action
+const receiveUser = (user) => ({ type: RECEIVE_USER, data: user })
+
+// 重置用戶的同步action
+const resetUser = (msg) => ({ type: RESET_USER, data: msg})
 
 // 注册异步action
 // 异步action返回的是一个函数, dispatch是一个固定参数
@@ -74,6 +80,54 @@ export const login = (user) => {
         }
         else {
             dispatch(errorMsg(result.msg))
+        }
+    }
+}
+
+// 處理/update請求的函数
+export const updateUser = (user) => {
+    return async dispatch => {
+        // 异步更新并获取用户数据
+        const response = await reqUpdateUser(user);
+        const result = response.data;
+        /* 
+        bossinfo update result sent back from server:
+        
+        {
+            "code": 0,
+            "data": {
+                "header": "头像10",
+                "post": "front-end developer",
+                "company": "google",
+                "salary": "20k",
+                "info": "javascript",
+                "_id": "5dbfd4ce59393d089c096c3f",
+                "username": "Mario",
+                "type": "recruit"
+            }
+        }
+
+        jobseekerinfo update result sent back from server:
+        
+        {
+            "code": 0,
+            "data": {
+                "header": "头像10",
+                "post": "front-end developer",
+                "info": "know javascript, python",
+                "_id": "5dbfd4ac59393d089c096c3e",
+                "username": "Yoshi",
+                "type": "findJob"
+            }
+        }
+        */
+        if (result.code === 0) { // 更新成功
+            // 分发同步action到reducers
+            dispatch(receiveUser(result.data));
+        }
+        else { // 更新失败
+            // 分发同步action到reducers
+            dispatch(resetUser(result.msg));
         }
     }
 }

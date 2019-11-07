@@ -3,7 +3,7 @@
  */
 
 import { combineReducers } from 'redux'
-import { AUTH_SUCCESS, ERROR_MSG } from './action-types'
+import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from './action-types'
 
 import { getRedirectTo } from '../utils'
 
@@ -26,6 +26,13 @@ function user(state=initUser, action) {
         case ERROR_MSG: // data是msg
             return {
                 ...state, 
+                msg: action.data
+            }
+        case RECEIVE_USER: // data是user
+            return action.data
+        case RESET_USER: // data是msg
+            return {
+                ...initUser, 
                 msg: action.data
             }
         default:
