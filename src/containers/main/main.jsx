@@ -99,6 +99,19 @@ class Main extends Component {
         const path = this.props.location.pathname // 請求的路徑
         const currentNav = navList.find(nav => nav.path === path) // 從navList中核對并取得該請求路徑 (可能沒有)
 
+        // currentNav 可以是：/boss, /jobseeker, /message, /personal
+        if (currentNav) {
+            // 決定數組哪個对象需要添加hidden属性
+            if (user.type === 'boss') {
+                // 給數組的第2個对象添加hidden属性
+                navList[1].hidden = true 
+            }
+            else {
+                // 給數組的第1個对象添加hidden属性
+                navList[0].hidden = true
+            }
+        }
+
         return (
             <div>
                 {/* Top navbar */}

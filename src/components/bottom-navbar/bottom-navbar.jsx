@@ -15,6 +15,9 @@ class BottomNavbar extends Component {
 
     render() {
         let { navList } = this.props
+        // 過濾掉hidden為true的nav
+        // The filter() method creates an array filled with all array elements that pass a test
+        navList = navList.filter(nav => !nav.hidden)
         const path = this.props.location.pathname // 請求的路徑
 
         return (
