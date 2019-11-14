@@ -13,3 +13,6 @@ export const reqLogin = ({username, password}) => ajax('/login', {username, pass
 
 // 定義更新用戶接口
 export const reqUpdateUser = (user) => ajax('/update', user, 'POST')
+
+// 定義獲取用戶信息接口
+export const reqUser = () => ajax('/user')

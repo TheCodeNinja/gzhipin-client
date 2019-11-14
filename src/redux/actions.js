@@ -5,7 +5,7 @@
  */
 
 import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from "./action-types"
-import { reqRegister, reqLogin, reqUpdateUser } from '../api'
+import { reqRegister, reqLogin, reqUpdateUser, reqUser } from '../api'
 
 // 每一个action-type都对应一个同步action
 
@@ -128,6 +128,21 @@ export const updateUser = (user) => {
         else { // 更新失败
             // 分发同步action到reducers
             dispatch(resetUser(result.msg));
+        }
+    }
+}
+
+// 获取用户信息数据
+export const getUser = () => {
+    return async dispatch => {
+        // 获取用户数据
+        const response = await reqUser(); // 發送ajax請求 (异步请求)
+        const result = response.data;
+        if (result.code === 0) { // 请求成功
+            dispatch(receiveUser(result.data)); // 发送同步action
+        } 
+        else { // 请求失敗
+            dispatch(resetUser(result.msg)); // 发送同步action
         }
     }
 }
