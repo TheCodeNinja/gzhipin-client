@@ -2,13 +2,51 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Cookies from 'js-cookie'
+import { NavBar } from 'antd-mobile'
 
 import JobSeekerInfo from '../jobseeker-info/jobseeker-info'
 import BossInfo from '../boss-info/boss-info'
+import JobSeeker from '../jobseeker/jobseeker'
+import Boss from '../boss/boss'
+import Message from '../message/message'
+import Personal from '../personal/personal'
+import PageNotFound from '../../components/page-not-found/page-not-found'
 import { getRedirectTo } from '../../utils'
 import { getUser } from '../../redux/actions'
 
 class Main extends Component {
+
+    // 给组件对象添加属性
+    navList = [ // 包含所有导航的信息
+        {
+            path:　'/boss',
+            component: Boss,
+            title:　'Job Seeker list',
+            icon:　'jobseeker',
+            text:　'求職者'
+        },
+        {
+            path: '/jobseeker',
+            component: JobSeeker,
+            title: 'Boss list',
+            icon: 'boss',
+            text: '招聘者'
+        },
+        {
+            path: '/message',
+            component: Message,
+            title: 'Message list',
+            icon: 'message',
+            text: '消息'
+        },
+        {
+            path: '/personal',
+            component: Personal,
+            title: 'Person Info',
+            icon:' personal',
+            text:' 个人'
+        },
+    ]
 
     // after all the elements of the page is rendered correctly, this method is called
     componentDidMount() {
@@ -54,13 +92,24 @@ class Main extends Component {
                 return <Redirect to={path}/>
             }
         }
-       
+        
+        const { navList } = this
+        const path = this.props.location.pathname // 請求的路徑
+        const currentNav = navList.find(nav => nav.path === path) // 從navList中核對并取得該請求路徑 (可能沒有)
+
         return (
             <div>
+                {/* Top navbar */}
+                { currentNav ? <NavBar>{currentNav.title}</NavBar> : null }
                 <Switch>
+                    {/* Container component routes */}
+                    { navList.map(nav => <Route path={nav.path} component={nav.component}></Route>) }
                     <Route path='/bossinfo' component={BossInfo}></Route>
                     <Route path='/jobseekerinfo' component={JobSeekerInfo}></Route>
+                    <Route component={PageNotFound}></Route>
                 </Switch>
+                {/* Bottom navbar */}
+                { currentNav ? <div>Bottom Navbar</div> : null }
             </div>
         )
     }
