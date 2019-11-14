@@ -11,6 +11,8 @@ import Boss from '../boss/boss'
 import Message from '../message/message'
 import Personal from '../personal/personal'
 import PageNotFound from '../../components/page-not-found/page-not-found'
+import BottomNavbar from '../../components/bottom-navbar/bottom-navbar'
+
 import { getRedirectTo } from '../../utils'
 import { getUser } from '../../redux/actions'
 
@@ -19,11 +21,11 @@ class Main extends Component {
     // 给组件对象添加属性
     navList = [ // 包含所有导航的信息
         {
-            path:　'/boss',
+            path: '/boss',
             component: Boss,
-            title:　'Job Seeker list',
-            icon:　'jobseeker',
-            text:　'求職者'
+            title: 'Job Seeker list',
+            icon: 'jobseeker',
+            text: '求職者'
         },
         {
             path: '/jobseeker',
@@ -43,8 +45,8 @@ class Main extends Component {
             path: '/personal',
             component: Personal,
             title: 'Person Info',
-            icon:' personal',
-            text:' 个人'
+            icon: 'personal',
+            text: '个人'
         },
     ]
 
@@ -103,13 +105,13 @@ class Main extends Component {
                 { currentNav ? <NavBar>{currentNav.title}</NavBar> : null }
                 <Switch>
                     {/* Container component routes */}
-                    { navList.map(nav => <Route path={nav.path} component={nav.component}></Route>) }
+                    { navList.map(nav => <Route key={nav.path} path={nav.path} component={nav.component}></Route>) }
                     <Route path='/bossinfo' component={BossInfo}></Route>
                     <Route path='/jobseekerinfo' component={JobSeekerInfo}></Route>
                     <Route component={PageNotFound}></Route>
                 </Switch>
                 {/* Bottom navbar */}
-                { currentNav ? <div>Bottom Navbar</div> : null }
+                { currentNav ? <BottomNavbar navList={navList} /> : null }
             </div>
         )
     }
