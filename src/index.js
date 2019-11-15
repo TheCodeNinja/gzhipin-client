@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import store from './redux/store'
 
 import './assets/css/index.less'
+import './test/socketio-test'
 
 ReactDOM.render((
     <Provider store={store}>
