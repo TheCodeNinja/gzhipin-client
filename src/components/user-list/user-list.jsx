@@ -16,7 +16,7 @@ class UserList extends Component {
         const { userList } = this.props
 
         return (
-            <WingBlank>
+            <WingBlank style={{marginBottom: 50, marginTop: 50}}>
             {
                 userList.map(user => (
                     <div key={user._id}>

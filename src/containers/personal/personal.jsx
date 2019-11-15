@@ -33,7 +33,7 @@ class Personal extends Component {
         } = this.props.user;
         
         return (
-            <div>
+            <div style={{marginTop: 50, marginBottom: 50}}>
                 <Result
                     img={<img src={require(`../../assets/images/${header}.png`)} 
                     style={{width: 50}}/>}

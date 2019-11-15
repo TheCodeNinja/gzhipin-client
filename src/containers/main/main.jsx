@@ -115,7 +115,7 @@ class Main extends Component {
         return (
             <div>
                 {/* Top navbar */}
-                { currentNav ? <NavBar>{currentNav.title}</NavBar> : null }
+                { currentNav ? <NavBar className='sticky-header'>{currentNav.title}</NavBar> : null }
                 <Switch>
                     {/* Container component routes */}
                     { navList.map(nav => <Route key={nav.path} path={nav.path} component={nav.component}></Route>) }
