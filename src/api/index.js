@@ -16,3 +16,6 @@ export const reqUpdateUser = (user) => ajax('/update', user, 'POST')
 
 // 定義獲取用戶信息接口
 export const reqUser = () => ajax('/user')
+
+// 定義獲取指定類型的用戶信息接口
+export const reqUserList = (type) => ajax('/userlist', {type})

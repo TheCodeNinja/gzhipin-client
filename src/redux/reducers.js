@@ -3,7 +3,7 @@
  */
 
 import { combineReducers } from 'redux'
-import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from './action-types'
+import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST } from './action-types'
 
 import { getRedirectTo } from '../utils'
 
@@ -40,6 +40,17 @@ function user(state=initUser, action) {
     }
 }
 
+const initUserList = []
+
+// 產生userlist狀態的reducer
+function userList(state=initUserList, action) {
+    switch (action.type) {
+        case RECEIVE_USER_LIST:
+            return action.data // data是userList
+        default:
+            return state
+    }
+}
 
 // 向外暴露的狀態的結構：{user: {}}
 export default combineReducers({

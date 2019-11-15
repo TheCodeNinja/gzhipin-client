@@ -4,8 +4,8 @@
  * 同步action
  */
 
-import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER } from "./action-types"
-import { reqRegister, reqLogin, reqUpdateUser, reqUser } from '../api'
+import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST } from "./action-types"
+import { reqRegister, reqLogin, reqUpdateUser, reqUser, reqUserList } from '../api'
 
 // 每一个action-type都对应一个同步action
 
@@ -20,6 +20,9 @@ const receiveUser = (user) => ({ type: RECEIVE_USER, data: user })
 
 // 重置用戶的同步action
 export const resetUser = (msg) => ({ type: RESET_USER, data: msg})
+
+// 接收用戶列表的同步action
+export const receiveUserList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
 
 // 注册异步action
 // 异步action返回的是一个函数, dispatch是一个固定参数
@@ -143,6 +146,19 @@ export const getUser = () => {
         } 
         else { // 请求失敗
             dispatch(resetUser(result.msg)); // 发送同步action
+        }
+    }
+}
+
+// 获取用戶列表的異步action
+export const getUserList = (type) => {
+    return async dispatch => {
+        // 执行異步ajax請求
+        const response = await reqUserList(type)
+        const result = response.data
+        // 得到結果後，分發一個同步action
+        if (result.code === 0) {
+            dispatch(receiveUserList(result.data))
         }
     }
 }
