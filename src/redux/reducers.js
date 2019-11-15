@@ -52,7 +52,8 @@ function userList(state=initUserList, action) {
     }
 }
 
-// 向外暴露的狀態的結構：{user: {}}
+// 向外暴露的狀態的結構：{user: {}, userList: []}
 export default combineReducers({
-    user
+    user,
+    userList
 })
