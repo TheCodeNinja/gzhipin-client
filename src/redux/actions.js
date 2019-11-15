@@ -19,7 +19,7 @@ const errorMsg = (msg) => ({ type: ERROR_MSG, data: msg })
 const receiveUser = (user) => ({ type: RECEIVE_USER, data: user })
 
 // 重置用戶的同步action
-const resetUser = (msg) => ({ type: RESET_USER, data: msg})
+export const resetUser = (msg) => ({ type: RESET_USER, data: msg})
 
 // 注册异步action
 // 异步action返回的是一个函数, dispatch是一个固定参数

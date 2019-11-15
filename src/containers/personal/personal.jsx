@@ -5,11 +5,26 @@ Personal ui container route component
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Result, Button, List, WhiteSpace, Modal } from 'antd-mobile'
+import Cookies from 'js-cookie'
+import { resetUser } from '../../redux/actions'
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
 class Personal extends Component {
+
+    // logout click event handler
+    handleLogOut = () => {
+        Modal.alert('退出', '确认退出吗', [
+            { text: '取消' },
+            { text: '确认', onPress: () => {
+                // 删除cookie
+                Cookies.remove('userId')
+                // 清除redux当中的user数据
+                this.props.resetUser()
+            }}
+        ])
+    }
 
     render() {
 
@@ -34,7 +49,7 @@ class Personal extends Component {
                 </List>
                 <WhiteSpace></WhiteSpace>
                 <List>
-                    <Button type='warning'>退出登录</Button>
+                    <Button type='warning' onClick={this.handleLogOut}>退出登录</Button>
                 </List>
             </div>
         )
@@ -42,5 +57,5 @@ class Personal extends Component {
 }
  export default connect(
      state => ({user: state.user}),
-     {}
+     {resetUser}
  )(Personal)
