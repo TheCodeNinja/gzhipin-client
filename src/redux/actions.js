@@ -6,6 +6,19 @@
 
 import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST } from "./action-types"
 import { reqRegister, reqLogin, reqUpdateUser, reqUser, reqUserList } from '../api'
+import io from 'socket.io-client'
+
+// Initialize socket io
+function initIO(dispatch, userid) {
+    if (!io.socket) { // socket exists? (singleton pattern)
+        // Connect to server on this socket
+        io.socket = io('ws://localhost:4000')
+        // Listen to the socket receiveMsg event
+        io.socket.on('receiveMsg', function(chatMsg) {
+            console.log('[ Received from server ]', chatMsg)
+        })
+    }
+}
 
 // 每一个action-type都对应一个同步action
 
@@ -165,6 +178,10 @@ export const getUserList = (type) => {
 
 export const sendMsg = ({from, to, content}) => {
     return dispatch => {
-        console.log('sendMsg: ', {from, to, content})
+        console.log('[ Sent to server ]', {from, to, content})
+        // Call initIO()
+        initIO()
+        // Send message
+        io.socket.emit('sendMsg', {from, to, content})
     }
 }
