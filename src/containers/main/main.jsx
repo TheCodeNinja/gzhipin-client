@@ -12,6 +12,7 @@ import Message from '../message/message'
 import Personal from '../personal/personal'
 import PageNotFound from '../../components/page-not-found/page-not-found'
 import BottomNavbar from '../../components/bottom-navbar/bottom-navbar'
+import Chat from '../chat/chat'
 
 import { getRedirectTo } from '../../utils'
 import { getUser } from '../../redux/actions'
@@ -121,6 +122,7 @@ class Main extends Component {
                     { navList.map(nav => <Route key={nav.path} path={nav.path} component={nav.component}></Route>) }
                     <Route path='/bossinfo' component={BossInfo}></Route>
                     <Route path='/jobseekerinfo' component={JobSeekerInfo}></Route>
+                    <Route path='/chat/:userId' component={Chat}></Route>
                     <Route component={PageNotFound}></Route>
                 </Switch>
                 {/* Bottom navbar */}
