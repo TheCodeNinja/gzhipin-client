@@ -19,3 +19,9 @@ export const reqUser = () => ajax('/user')
 
 // 定義獲取指定類型的用戶信息接口
 export const reqUserList = (type) => ajax('/userlist', {type})
+
+// 定義獲取當前用戶聊天消息接口
+export const reqChatMsgList = () => ajax('/msglist')
+
+// 定義修定指定消息為已讀接口
+export const reqReadMsg = (from) => ajax('/readMsg', {from}, 'POST')

@@ -3,9 +3,13 @@
  */
 
 import { combineReducers } from 'redux'
-import { AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST } from './action-types'
+import { 
+    AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST, 
+    RECEIVE_MSG_LIST, RECEIVE_MSG
+} from './action-types'
 
 import { getRedirectTo } from '../utils'
+import { reqUserList } from '../api'
 
 // state的初始对象
 const initUser = {
@@ -52,8 +56,32 @@ function userList(state=initUserList, action) {
     }
 }
 
-// 向外暴露的狀態的結構：{user: {}, userList: []}
+const initChat = {
+    users: {}, // {userId: {username, header}}
+    chatMsgs: [], // [from, to, chat_id, read, created_at]
+    unReadCount: 0
+}
+
+function chat(state=initChat, action) {
+    switch (action.type) {
+        case RECEIVE_MSG_LIST: // data: {users, chatMsgs}
+            const {users, chatMsgs} = action.data
+            return {
+                users,
+                chatMsgs,
+                unReadCount: 0
+            }
+        case RECEIVE_MSG:
+            return
+        default:
+            return state
+    }
+}
+
+
+// 向外暴露的狀態的結構：{user: {}, userList: [], chat: {}}
 export default combineReducers({
     user,
-    userList
+    userList,
+    chat
 })
