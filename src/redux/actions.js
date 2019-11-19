@@ -162,3 +162,9 @@ export const getUserList = (type) => {
         }
     }
 }
+
+export const sendMsg = ({from, to, content}) => {
+    return dispatch => {
+        console.log('sendMsg: ', {from, to, content})
+    }
+}
