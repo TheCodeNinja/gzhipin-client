@@ -9,28 +9,31 @@ import {
     RECEIVE_MSG_LIST, RECEIVE_MSG
 } from "./action-types"
 import { 
-    reqRegister, reqLogin, reqUpdateUser, reqUser, reqUserList, regChatMsgList,
-    reqReadMsg,
-    reqChatMsgList
+    reqRegister, reqLogin, reqUpdateUser, reqUser, reqUserList, reqChatMsgList,
+    reqReadMsg
 } from '../api'
 import io from 'socket.io-client'
 
 // Initialize socket io
-function initIO(dispatch) {
+function initIO(dispatch, userId) {
     if (!io.socket) { // socket exists? (singleton pattern)
         // Connect to server on this socket
         io.socket = io('ws://localhost:4000')
         // Listen to the socket receiveMsg event
         io.socket.on('receiveMsg', function(chatMsg) {
             console.log('[ Received from server ]', chatMsg)
+            // Dispatch sync action only when chatMsg is associated with current user
+            if (userId === chatMsg.from || userId === chatMsg.to) {
+                dispatch(receiveMsg(chatMsg))
+            }
         })
     }
 }
 
 // 异步获取消息列表数据
-async function getMsgList(dispatch) {
+async function getMsgList(dispatch, userId) {
     // Initialize socket io
-    initIO()
+    initIO(dispatch, userId)
     // Send ajax request
     const response = await reqChatMsgList()
     // Get response data
@@ -62,6 +65,9 @@ export const receiveUserList = (userList) => ({type: RECEIVE_USER_LIST, data: us
 // 接收消息列表的同步action
 export const receiveMsgList = ({users, chatMsgs}) => ({type: RECEIVE_MSG_LIST, data: {users, chatMsgs}})
 
+// 接收一条消息的同步action
+const receiveMsg = (chatMsg) => ({type: RECEIVE_MSG, data: chatMsg})
+
 // 注册异步action
 // 异步action返回的是一个函数, dispatch是一个固定参数
 export const register = (user) => {
@@ -92,7 +98,7 @@ export const register = (user) => {
         const result = response.data
 
         if (result.code === 0) {
-            getMsgList(dispatch)
+            getMsgList(dispatch, result.data._id)
             dispatch(authSuccess(result.data))
         }
         else {
@@ -118,7 +124,7 @@ export const login = (user) => {
         const result = response.data
         
         if (result.code === 0) {
-            getMsgList(dispatch)
+            getMsgList(dispatch, result.data._id)
             dispatch(authSuccess(result.data))
         }
         else {
@@ -182,7 +188,7 @@ export const getUser = () => {
         const response = await reqUser(); // 發送ajax請求 (异步请求)
         const result = response.data;
         if (result.code === 0) { // 请求成功
-            getMsgList(dispatch)
+            getMsgList(dispatch, result.data._id)
             dispatch(receiveUser(result.data)); // 发送同步action
         } 
         else { // 请求失敗
