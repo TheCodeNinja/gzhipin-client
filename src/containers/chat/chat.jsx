@@ -27,14 +27,39 @@ class Chat extends Component {
     }
 
     render() {
+        // Get data from redux
+        const { user } = this.props
+        const { users, chatMsgs } = this.props.chat
+
+        // Get chatId
+        const meId = user._id
+        if (!users[meId]) { // checking #1
+            return null
+        }
+        const targetId = this.props.match.params.userId
+        const chatId = [meId, targetId].sort().join('_')
+
+        // Filter chatMsgs by chatId
+        const msgs = chatMsgs.filter(msg => msg.chat_id === chatId)
+
+        // Get target user icon
+        const targetHeader = users[targetId].header // users is empty in redux at first, we need 'checking #1'
+        const targetIcon = targetHeader ? require(`../../assets/images/${targetHeader}.png`) : null
+
         return (
             <div id='chat-page'>
                 <NavBar>Navbar</NavBar>
                 <List>
-                    <Item thumb={require('../../assets/images/头像1.png')}>Hello</Item>
-                    <Item thumb={require('../../assets/images/头像1.png')}>Are you busy</Item>
-                    <Item className="chat-me" extra='Me'>Hi</Item>
-                    <Item className="chat-me" extra='Me'>Not busy</Item>
+                {
+                    msgs.map(msg => {
+                        if (targetId === msg.from) { // target user's message
+                            return (<Item key={msg._id} thumb={targetIcon}>{msg.content}</Item>)
+                        } 
+                        else { // my message
+                            return (<Item key={msg._id} className='chat-me' extra='Me'>{msg.content}</Item>)
+                        }
+                    })
+                }
                 </List>
                 <div className='am-tab-bar'>
                     <InputItem 
@@ -52,6 +77,6 @@ class Chat extends Component {
 }
 
 export default connect(
-    state => ({user: state.user}),
+    state => ({user: state.user, chat: state.chat}),
     {sendMsg}
 )(Chat)

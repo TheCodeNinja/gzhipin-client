@@ -103,7 +103,7 @@ class Main extends Component {
         // currentNav 可以是：/boss, /jobseeker, /message, /personal
         if (currentNav) {
             // 決定數組哪個对象需要添加hidden属性
-            if (user.type === 'boss') {
+            if (user.type === 'recruit') {
                 // 給數組的第2個对象添加hidden属性
                 navList[1].hidden = true 
             }

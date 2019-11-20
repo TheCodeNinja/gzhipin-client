@@ -16,7 +16,7 @@ import {
 import io from 'socket.io-client'
 
 // Initialize socket io
-function initIO(dispatch, userid) {
+function initIO(dispatch) {
     if (!io.socket) { // socket exists? (singleton pattern)
         // Connect to server on this socket
         io.socket = io('ws://localhost:4000')
