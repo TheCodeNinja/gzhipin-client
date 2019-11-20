@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { NavBar, List, InputItem } from 'antd-mobile'
+import { NavBar, List, InputItem, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { sendMsg } from '../../redux/actions'
+import { setMaxListeners } from 'cluster'
 
 const Item = List.Item
 
 class Chat extends Component {
     state = {
-        content: ''
+        content: '',
+        isShow: false
     }
 
     handleSend = () => {
@@ -23,8 +25,28 @@ class Chat extends Component {
         // Make async request
         this.props.sendMsg({from, to, content})
         // Clear state
-        this.setState({content: ''})
+        this.setState({content: '', isShow: false})
     }
+
+    handleShow = () => {
+        const isShow = !this.state.isShow
+        this.setState({isShow})
+        // Solve emoji list bug when displaying
+        if (isShow) {
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'))
+            }, 0)
+        }
+    }
+
+    componentWillMount() {
+        this.emojis = ['😂','😂','😃','😄','😂','😃','😄','😂','😃','😄','😂','😃','😄'
+          ,'😂','😃','😄','😂','😃','😄','😂','😃','😄','😂','😃',,'😂','😃','😄','😂'
+          ,'😃','😄','😂','😃','😄','😂','😃',,'😂','😃','😄','😂','😃','😄','😂','😃'
+          ,'😄','😂','😃',
+        ]
+        this.emojis = this.emojis.map(item => ({text: item}))
+      }
 
     render() {
         // Get data from redux
@@ -66,10 +88,25 @@ class Chat extends Component {
                         placeholder='Input message here' 
                         value={this.state.content} // Update the value based on current state
                         onChange={val => this.setState({content: val})} // Update the state when change
+                        onFocus={()=>this.setState({isShow: false})}
                         extra={
-                            <span onClick={this.handleSend}>Send</span>
+                            <span>
+                                <span onClick={this.handleShow} style={{marginRight: 5}}>😃</span>
+                                <span onClick={this.handleSend}>Send</span>
+                            </span>
                         }>
                     </InputItem>
+                    { 
+                    this.state.isShow ? (
+                        <Grid data={this.emojis}
+                            columnNum={8}
+                            carouselMaxRow={4}
+                            isCarousel={true}
+                            onClick={(item) => {
+                                this.setState({content: this.state.content + item.text})
+                            }}>
+                        </Grid> ) : null 
+                    }
                 </div>
             </div>
         )
