@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { NavBar, List, InputItem, Grid } from 'antd-mobile'
+import { NavBar, List, InputItem, Grid, Icon } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { sendMsg } from '../../redux/actions'
-import { setMaxListeners } from 'cluster'
 
 const Item = List.Item
 
@@ -46,7 +45,17 @@ class Chat extends Component {
           ,'😄','😂','😃',
         ]
         this.emojis = this.emojis.map(item => ({text: item}))
-      }
+    }
+
+    componentDidMount() {
+        // Scoll to the bottom when mounting component
+        window.scrollTo(0, document.body.scrollHeight)
+    }
+
+    componentDidUpdate() {
+        // Scoll to the bottom when updating component
+        window.scrollTo(0, document.body.scrollHeight)
+    }
 
     render() {
         // Get data from redux
@@ -70,8 +79,13 @@ class Chat extends Component {
 
         return (
             <div id='chat-page'>
-                <NavBar>Navbar</NavBar>
-                <List>
+                <NavBar 
+                    className='sticky-header' 
+                    icon={<Icon type='left'/>}
+                    onLeftClick={() => this.props.history.goBack()}>
+                    {users[targetId].username}
+                </NavBar>
+                <List style={{marginTop: 45, marginBottom: 50}}>
                 {
                     msgs.map(msg => {
                         if (targetId === msg.from) { // target user's message
