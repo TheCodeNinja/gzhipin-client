@@ -58,7 +58,7 @@ function userList(state=initUserList, action) {
 
 const initChat = {
     users: {}, // users: {userId: {username, header}, ...}
-    chatMsgs: [], // chatMsgs: [from, to, chat_id, read, created_at]
+    chatMsgs: [], // chatMsgs: [{from, to, chat_id, read, created_at}, ...]
     unReadCount: 0
 }
 
