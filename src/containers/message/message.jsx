@@ -9,13 +9,20 @@ import { List, Badge } from 'antd-mobile'
 const Item = List.Item
 const Brief = Item.Brief
 
-function getLastMsgs(chatMsgs) {
+function getLastMsgs(chatMsgs, userId) {
 
     // 1. Group the messages by chatId, and store the last message of each group to lastMsgObj
     // Create empty object
     let lastMsgObj = {} // {chatId1: {lastMsg1}, chatId2: {lastMsg2}, ...}
     // Loop chatMsgs array
     chatMsgs.forEach(msg => {
+        // If the message is sent by somebody and is unread
+        if (msg.to === userId && !msg.read) {
+            msg.unReadCount = 1
+        }
+        else { // If the message is read
+            msg.unReadCount = 0
+        }
         // Get the message chatId
         const chatId = msg.chat_id
         // Check if lastMsgObj exists a message belong to this chatId
@@ -24,11 +31,15 @@ function getLastMsgs(chatMsgs) {
             lastMsgObj[chatId] = msg
         }
         else { // Exists a message belong to this chatId
+            // Calculate the new unReadCount first before comparison
+            const unReadCountTotal = message.unReadCount + msg.unReadCount
             // Compare the current message with the existed message
             // Only store the latest message for this chatId in lastMsgObj
             if (msg.created_at - message.created_at) {
                 lastMsgObj[chatId] = msg
             }
+            // Store the new unReadCount
+            lastMsgObj[chatId].unReadCount = unReadCountTotal
         }
     })
     console.log(lastMsgObj)
@@ -40,7 +51,7 @@ function getLastMsgs(chatMsgs) {
     lastMsgs.sort(function(m1, m2) {
         return m2.created_at - m1.created_at
     })
-    
+
     // Return the array
     return lastMsgs
 }
@@ -52,7 +63,7 @@ class Message extends Component {
         console.log("[ chatMsgs ]")
         console.log(chatMsgs)
         // 对chatMsgs根据chat_id进行分组
-        const lastMsgs = getLastMsgs(chatMsgs)
+        const lastMsgs = getLastMsgs(chatMsgs, user._id)
 
         return (
             <List style={{marginTop: 50, marginBottom: 50}}>
@@ -63,7 +74,7 @@ class Message extends Component {
                     return (
                         <Item 
                             key={msg._id}
-                            extra={<Badge text={"0"}/>}
+                            extra={<Badge text={msg.unReadCount}/>}
                             thumb={targetUser.header ? require(`../../assets/images/${targetUser.header}.png`) : null}
                             arrow='horizontal'
                             onClick={() => this.props.history.push(`/chat/${targetUserId}`)}>
