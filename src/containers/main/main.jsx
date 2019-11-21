@@ -76,7 +76,7 @@ class Main extends Component {
 
         // 2. 如cookie有userId, 
         // 读取redux中的_id, 判斷_id是否存在
-        const { user } = this.props // redux初始沒有数据 
+        const { user, unReadCount } = this.props // redux初始沒有数据 
 
         // debugger
 
@@ -126,13 +126,13 @@ class Main extends Component {
                     <Route component={PageNotFound}></Route>
                 </Switch>
                 {/* Bottom navbar */}
-                { currentNav ? <BottomNavbar navList={navList} /> : null }
+                { currentNav ? <BottomNavbar navList={navList} unReadCount={unReadCount}/> : null }
             </div>
         )
     }
 }
 
 export default connect(
-    state => ({user: state.user}),
+    state => ({user: state.user, unReadCount: state.chat.unReadCount}),
     { getUser }
 )(Main)

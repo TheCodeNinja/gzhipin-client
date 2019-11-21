@@ -24,7 +24,7 @@ function initIO(dispatch, userId) {
             console.log('[ Received from server ]', chatMsg)
             // Dispatch sync action only when chatMsg is associated with current user
             if (userId === chatMsg.from || userId === chatMsg.to) {
-                dispatch(receiveMsg(chatMsg))
+                dispatch(receiveMsg(chatMsg, userId))
             }
         })
     }
@@ -41,7 +41,7 @@ async function getMsgList(dispatch, userId) {
     if (result.code === 0) { // Successful
         const {users, chatMsgs} = result.data
         // Dispatch sync action
-        dispatch(receiveMsgList({users, chatMsgs}))
+        dispatch(receiveMsgList({users, chatMsgs, userId}))
     }
 }
 
@@ -63,10 +63,10 @@ export const resetUser = (msg) => ({ type: RESET_USER, data: msg})
 export const receiveUserList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
 
 // 接收消息列表的同步action
-export const receiveMsgList = ({users, chatMsgs}) => ({type: RECEIVE_MSG_LIST, data: {users, chatMsgs}})
+export const receiveMsgList = ({users, chatMsgs, userId}) => ({ type: RECEIVE_MSG_LIST, data: {users, chatMsgs, userId} })
 
 // 接收一条消息的同步action
-const receiveMsg = (chatMsg) => ({type: RECEIVE_MSG, data: chatMsg})
+const receiveMsg = ({chatMsg, userId}) => ({ type: RECEIVE_MSG, data: {chatMsg, userId} })
 
 // 注册异步action
 // 异步action返回的是一个函数, dispatch是一个固定参数
