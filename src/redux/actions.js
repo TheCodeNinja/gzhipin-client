@@ -6,7 +6,7 @@
 
 import { 
     AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST,
-    RECEIVE_MSG_LIST, RECEIVE_MSG
+    RECEIVE_MSG_LIST, RECEIVE_MSG, MSG_READ
 } from "./action-types"
 import { 
     reqRegister, reqLogin, reqUpdateUser, reqUser, reqUserList, reqChatMsgList,
@@ -67,6 +67,9 @@ export const receiveMsgList = ({users, chatMsgs, userId}) => ({ type: RECEIVE_MS
 
 // 接收一条消息的同步action
 const receiveMsg = ({chatMsg, userId}) => ({ type: RECEIVE_MSG, data: {chatMsg, userId} })
+
+// Read message synchronous action
+const msgRead = ({from , to, readCount}) => ({ type: MSG_READ, data: {from , to, readCount} })
 
 // 注册异步action
 // 异步action返回的是一个函数, dispatch是一个固定参数
@@ -215,5 +218,21 @@ export const sendMsg = ({from, to, content}) => {
         console.log('[ Sent to server ]', {from, to, content})
         // Send message
         io.socket.emit('sendMsg', {from, to, content})
+    }
+}
+
+// Read message asynchronous action
+export const readMsg = ({from, to}) => {
+    return async dispatch => {
+        // Send ajax request
+        // Modify "read = true"
+        const response = await reqReadMsg(from)
+        // Get response data
+        const result = response.data // {code: 0, data: number}
+        if (result.code === 0) {
+            const readCount = result.data
+            // Send synchronous action to reducer
+            dispatch(msgRead({from , to, readCount}))
+        }
     }
 }

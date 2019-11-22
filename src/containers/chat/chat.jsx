@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { NavBar, List, InputItem, Grid, Icon } from 'antd-mobile'
 import { connect } from 'react-redux'
-import { sendMsg } from '../../redux/actions'
+import { sendMsg, readMsg } from '../../redux/actions'
 
 const Item = List.Item
 
@@ -55,6 +55,14 @@ class Chat extends Component {
     componentDidUpdate() {
         // Scoll to the bottom when updating component
         window.scrollTo(0, document.body.scrollHeight)
+    }
+
+    componentWillUnmount() {
+        const from = this.props.match.params.userId
+        const to = this.props.user._id
+        // Perform redux asynchronous action
+        // Read message
+        this.props.readMsg({from, to})
     }
 
     render() {
@@ -129,5 +137,5 @@ class Chat extends Component {
 
 export default connect(
     state => ({user: state.user, chat: state.chat}),
-    {sendMsg}
+    {sendMsg, readMsg}
 )(Chat)

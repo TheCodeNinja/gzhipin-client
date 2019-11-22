@@ -5,7 +5,7 @@
 import { combineReducers } from 'redux'
 import { 
     AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER, RECEIVE_USER_LIST, 
-    RECEIVE_MSG_LIST, RECEIVE_MSG
+    RECEIVE_MSG_LIST, RECEIVE_MSG, MSG_READ
 } from './action-types'
 
 import { getRedirectTo } from '../utils'
@@ -77,6 +77,20 @@ function chat(state=initChat, action) {
                 users: state.users,
                 chatMsgs: [...state.chatMsgs, chatMsg],
                 unReadCount: state.unReadCount + (!chatMsg.read && chatMsg.to === action.data.userId ? 1 : 0)
+            }
+        case MSG_READ:
+            const { from, to, readCount } = action.data
+            return {
+                users: state.users,
+                chatMsgs: state.chatMsgs.map(msg => {
+                    if (msg.from === from && msg.to === to && !msg.read) {
+                        return {...msg, read: true} // Override the value of `read`
+                    }
+                    else {
+                        return msg
+                    }
+                }),
+                unReadCount: state.unReadCount - readCount
             }
         default:
             return state
